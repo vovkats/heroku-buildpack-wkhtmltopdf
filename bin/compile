@@ -1,32 +1,21 @@
 #!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir>
 
 set -e
 
-BUILD_DIR=$1
-CACHE_DIR=$2
+BIN_PATH="$1/bin"
+TMP_PATH="$1/tmp"
+mkdir -p $BIN_PATH $TMP_PATH
 
-BIN_PATH="$BUILD_DIR/bin"
-TMP_PATH="$BUILD_DIR/tmp"
-mkdir -p $CACHE_DIR $BIN_PATH $TMP_PATH
+WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-wheezy-amd64.deb"
+WKHTMLTOPDF_PKG="$TMP_PATH/wkhtmltopdf.deb"
+WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltopdf"
+WKHTMLTOPDF_BINARIES="$WKHTMLTOPDF_PATH/usr/local/bin"
 
-WKHTMLTOPDF_URL="https://s3-us-west-1.amazonaws.com/tinfoil-docker-cache/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz"
-WKHTMLTOPDF_TAR="$CACHE_DIR/wkhtmltox.tar.xz"
-WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltox"
-WKHTMLTOPDF_BINARIES="$WKHTMLTOPDF_PATH/bin"
+echo "-----> Downloading wkhtmltopdf Debian package"
+curl -L $WKHTMLTOPDF_URL -o $WKHTMLTOPDF_PKG
 
-BIN_DIR=$(cd $(dirname $0); pwd)
-FONTS_DIR=$(cd "$BIN_DIR/../fonts"; pwd)
-
-if [ -f $WKHTMLTOPDF_TAR ]; then
-  echo "-----> Using wkhtmltopdf tar from cache"
-else
-  echo "-----> Downloading wkhtmltopdf tar"
-  curl -L $WKHTMLTOPDF_URL -o $WKHTMLTOPDF_TAR
-fi
-
-echo "-----> Unpacking tar"
-tar -xf $WKHTMLTOPDF_TAR -C $TMP_PATH
+echo "-----> Unpacking Debian package"
+dpkg -x $WKHTMLTOPDF_PKG $WKHTMLTOPDF_PATH
 
 echo "-----> Setting permissions"
 chmod +x $WKHTMLTOPDF_BINARIES/*
@@ -35,4 +24,6 @@ echo "-----> Moving binaries to the right place"
 mv $WKHTMLTOPDF_BINARIES/* $BIN_PATH/
 
 echo "-----> Cleaning up"
-rm -rf $WKHTMLTOPDF_PATH
+rm -rf $WKHTMLTOPDF_PKG $WKHTMLTOPDF_PATH
+
+exit 0
