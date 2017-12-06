@@ -6,7 +6,7 @@ BIN_PATH="$1/bin"
 TMP_PATH="$1/tmp"
 mkdir -p $BIN_PATH $TMP_PATH
 
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-wheezy-amd64.deb"
+WKHTMLTOPDF_URL="https://launchpadlibrarian.net/211978535/wkhtmltopdf_0.12.2.4-1_amd64.deb"
 WKHTMLTOPDF_PKG="$TMP_PATH/wkhtmltopdf.deb"
 WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltopdf"
 WKHTMLTOPDF_BINARIES="$WKHTMLTOPDF_PATH/usr/local/bin"
